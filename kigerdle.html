@@ -1,0 +1,440 @@
+<!-- <!DOCTYPE html>
+<html>
+  <body style="background-color: #3a3a3c;">
+
+  <script>
+  	function change_color(){
+    	document.body.style.backgroundColor = "green"
+    }
+  </script>
+    <input onkeyup="if(event.keyCode===13){press.click()}">
+    
+    <button id="press" onclick="change_color();">PRESS</button>
+  </body>
+
+</html>
+-->
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+	<title>Kigerdle</title>
+  <style>
+    html {
+      height: 100%;
+    }
+    body {
+      height: 100%;
+      background-color: #121213;
+      margin: 0;
+      padding: 0;
+      overflow-y: hidden;
+    }
+  </style>
+</head>
+
+
+<body>
+  <game-app>
+    <style>
+    #game {
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+    height: calc(100% - 50px);
+    display: flex;
+    flex-direction: column;
+    }
+    header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+    padding: 0 16px;
+    height: 50px;
+    color: #ffffff;
+    border-bottom: 1px solid #3a3a3c;
+    }
+    header .title {
+    font-family: 'Helvetica Neue';
+    font-weight: 700;
+    font-size: 37px;
+    line-height: 100%;
+    letter-spacing: 0.01em;
+    text-align: center;
+    left: 0;
+    right: 0;
+    pointer-events: none;
+    padding-bottom: 5px;
+    }
+    .menu-left {
+    display: flex;
+    margin: 0;
+    padding: 0;
+    align-items: center;
+    width: 70px;
+    justify-content: flex-start;
+    }
+    .menu-right {
+    display: flex;
+    width: 70px;
+    justify-content: flex-end;
+    }
+    @media (min-width: 415px) {
+      header {
+      padding: 0px 16px;
+      }
+    }
+    @media (max-width: 360px) {
+      header .title {
+      font-size: 22px;
+      letter-spacing: 0.1rem;
+      }
+    }
+    #board-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-grow: 1;
+    overflow: hidden;
+    }
+    #board {
+    display: grid;
+    grid-template-rows: repeat(6, 1fr);
+    grid-gap: 5px;
+    padding: 10px;
+    box-sizing: border-box;
+    }
+    button.icon {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0 4px;
+    }
+    #debug-tools {
+    position: absolute;
+    bottom: 0;
+    }
+
+    </style>
+  <header>
+    <div class="menu-left">
+      <button id="help-button" class="icon" aria-label="Help" tabindex="-1">
+        <game-icon icon="help">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+              <path fill="#ffffff" d="M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5 0-2.21-1.79-4-4-4z"></path>
+            </svg>
+        </game-icon>
+      </button>
+    </div>
+    <div class="title"> Kigerdle </div>
+    <div class="menu-right">
+      <button id="statistics-button" class="icon" aria-label="Statistics" tabindex="-1">
+        <game-icon icon="statistics">
+          <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+            <path fill="#ffffff" d="M16,11V3H8v6H2v12h20V11H16z M10,5h4v14h-4V5z M4,11h4v8H4V11z M20,19h-4v-6h4V19z"></path>
+          </svg>
+        </game-icon>
+      </button>
+    </div>
+  </header>
+  <div id="game">
+    <div id="board-container" style="background-color: green;">
+      <div id="board" style="width: 500px; height: 100%; background-color: red;">
+        <game-row length="5" style="background-color: orange;"">
+          <style>
+            
+            :host {
+              display: block;
+            }
+            :host([invalid]){
+              animation-name: Shake;
+              animation-duration: 600ms;
+            }
+            .row {
+              display: grid;
+              grid-template-columns: repeat(5, 1fr);
+              grid-gap: 5px;
+            }
+            .win {
+              animation-name: Bounce;
+              animation-duration: 1000ms;
+            }
+
+            @keyframes Bounce {
+              0%, 20% {
+                transform: translateY(0);
+              }
+              40% {
+                transform: translateY(-30px);
+              }
+              50% {
+                transform: translateY(5px);
+              }
+              60% {
+                transform: translateY(-15px);
+              }
+              80% {
+                transform: translateY(2px);
+              }
+              100% {
+                transform: translateY(0);
+              }
+            }
+
+            @keyframes Shake {
+              10%,
+              90% {
+                transform: translateX(-1px);
+              }
+
+              20%,
+              80% {
+                transform: translateX(2px);
+              }
+
+              30%,
+              50%,
+              70% {
+                transform: translateX(-4px);
+              }
+
+              40%,
+              60% {
+                transform: translateX(4px);
+              }
+            }
+          </style>
+          <div class="row">
+            <game-tile>
+              <style>
+                :host {
+                  display: inline-block;
+                }
+                .tile {
+                  width: 100%;
+                  display: inline-flex;
+                  justify-content: center;
+                  align-items: center;
+                  font-size: 2rem;
+                  line-height: 2rem;
+                  font-weight: bold;
+                  vertical-align: middle;
+                  box-sizing: border-box;
+                  color: #121213;
+                  text-transform: uppercase;
+                  user-select: none;
+                }
+                .tile::before {
+                  content: '';
+                  display: inline-block;
+                  padding-bottom: 100%;
+                }
+
+                @media (max-height: 600px) {
+                  .tile {
+                    font-size: 1em;
+                    line-height: 1em;
+                  }
+                }
+
+                .tile[data-state='empty'] {
+                  border: 2px solid #3a3a3c;
+                }
+                .tile[data-state='tbd'] {
+                  background-color: #121213;
+                  border: 2px solid #565758;
+                  color: #ffffff;
+                }
+                .tile[data-state='correct'] {
+                  background-color: #538d4e;
+                }
+                .tile[data-state='present'] {
+                  background-color: #b59f3b;
+                }
+                .tile[data-state='absent'] {
+                  background-color: #3a3a3c;
+                }
+
+                .tile[data-animation='pop'] {
+                  animation-name: PopIn;
+                  animation-duration: 100ms;
+                }
+
+                @keyframes PopIn {
+                  from {
+                    transform: scale(0.8);
+                    opacity: 0;
+                  }
+
+                  40% {
+                    transform: scale(1.1);
+                    opacity: 1;
+                  }
+                }
+                .tile[data-animation='flip-in'] {
+                  animation-name: FlipIn;
+                  animation-duration: 250ms;
+                  animation-timing-function: ease-in;
+                }
+                @keyframes FlipIn {
+                  0% {
+                    transform: rotateX(0);
+                  }
+                  100% {
+                    transform: rotateX(-90deg);
+                  }
+                }
+                .tile[data-animation='flip-out'] {
+                  animation-name: FlipOut;
+                  animation-duration: 250ms;
+                  animation-timing-function: ease-in;
+                }
+                @keyframes FlipOut {
+                  0% {
+                    transform: rotateX(-90deg);
+                  }
+                  100% {
+                    transform: rotateX(0);
+                  }
+                }
+              </style>
+              <div class="tile" data-state="empty" data-animation="idle">
+                ::before
+              </div>
+            </game-tile>
+          </div>
+        </game-row>
+      </div>
+    </div>
+    <game-keyboard>
+      <style>
+         :host {
+          height: 200px;
+         }
+         #keyboard {
+        margin: 0 8px;
+          user-select: none;
+        }
+
+        .row {
+          display: flex;
+          width: 100%;
+          margin: 0 auto 8px;
+        }
+
+        button {
+          font-family: 'Helvetica Neue';
+          font-weight: bold;
+          border: 0;
+          padding: 0;
+          margin: 0 0 0 0;
+          height: 58px;
+          border-radius: 4px;
+          cursor: pointer;
+          user-select: none;
+          background-color: #818384;
+          color: #ffffff;
+          flex: 1;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          text-transform: uppercase;
+        }
+
+        button:focus {
+          outline: none;
+        }
+
+      button.fade {
+          transition: background-color 0.1s ease, color 0.1s ease;
+        }
+
+        button:last-of-type {
+          margin: 0;
+        }
+
+        .half {
+        flex: 0.5;
+        }
+
+        .one {
+          flex: 1;
+        }
+
+        .one-and-a-half {
+          flex: 1.5;
+          font-size: 12px;
+        }
+
+        .two {
+          flex: 2;
+        }
+
+        button[data-state='correct'] {
+        background-color: #538d4e;
+          color: #ffffff;
+        }
+
+        button[data-state='present'] {
+          background-color: #b59f3b;
+          color: #ffffff;
+        }
+
+        button[data-state='absent'] {
+          background-color: #3a3a3c;
+          color: #ffffff;
+        }
+      </style>
+      <div id="keyboard">
+        <div class="row">
+          <button data-key="q">q</button>
+          <button data-key="w">w</button>
+          <button data-key="e">e</button>
+          <button data-key="r">r</button>
+          <button data-key="t">t</button>
+          <button data-key="y">y</button>
+          <button data-key="u">u</button>
+          <button data-key="i">i</button>
+          <button data-key="o">o</button>
+          <button data-key="p">p</button></div>
+        <div class="row">
+        <div class="spacer half"></div>
+        <button data-key="a">a</button>
+        <button data-key="s">s</button>
+        <button data-key="d">d</button>
+        <button data-key="f">f</button>
+        <button data-key="g">g</button>
+        <button data-key="h">h</button>
+        <button data-key="j">j</button>
+        <button data-key="k">k</button>
+        <button data-key="l">l</button>
+        <div class="spacer half"></div>
+      </div>
+        <div class="row">
+          <button data-key="↵" class="one-and-a-half">enter</button>
+          <button data-key="z">z</button>
+          <button data-key="x">x</button>
+          <button data-key="c">c</button>
+          <button data-key="v">v</button>
+          <button data-key="b">b</button>
+          <button data-key="n">n</button>
+          <button data-key="m">m</button>
+          <button data-key="←" class="one-and-a-half">
+            <game-icon icon="backspace">
+              <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24">
+                <path fill="#ffffff" d="M22 3H7c-.69 0-1.23.35-1.59.88L0 12l5.41 8.11c.36.53.9.89 1.59.89h15c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H7.07L2.4 12l4.66-7H22v14zm-11.59-2L14 13.41 17.59 17 19 15.59 15.41 12 19 8.41 17.59 7 14 10.59 10.41 7 9 8.41 12.59 12 9 15.59z">
+                </path>
+              </svg>
+            </game-icon>
+          </button>
+        </div>
+      </div>
+    </game-keyboard>
+  </div>
+
+  </game-app>
+</body>
+</html>
